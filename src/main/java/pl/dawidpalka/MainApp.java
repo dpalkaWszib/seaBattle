@@ -50,6 +50,7 @@ public class MainApp extends Application {
         GridPane page = new GridPane();
 
         Scene scene = new Scene(page, 800, 400);
+        scene.getStylesheets().add("style.css");
         page.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         Text scenetitle = new Text("Welcome");
@@ -81,22 +82,22 @@ public class MainApp extends Application {
                 int longitude = i;
                 int latitude = j;
 
-                Label label = new Label("");
-                    label.setStyle("-fx-background-color: #e0e0e0; -fx-alignment: center;");
-                    label.setId(longitude+"-"+latitude);
-                    label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                    label.setOnMouseEntered(e -> {
+                Button button = new Button("");
+//                    button.setStyle("-fx-background-color: #e0e0e0; -fx-alignment: center;");
+                button.setId(longitude+"-"+latitude);
+                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                button.setOnMouseEntered(e -> {
                         if(gameStatus == 1){
                             this.drawShip(longitude, latitude, grid, player);
                         }
 
                     });
-                    label.setOnMouseExited(e -> {
+                button.setOnMouseExited(e -> {
                         if(gameStatus == 1) {
                             this.clearShip(longitude, latitude, grid);
                         }
                     });
-                    label.setOnMouseClicked(e -> {
+                button.setOnMouseClicked(e -> {
                         if(gameStatus == 1) {
 
                             if (e.getButton() == MouseButton.PRIMARY) {
@@ -110,7 +111,7 @@ public class MainApp extends Application {
                             }
                         }
                     });
-                    grid.add(label, j, i);
+                    grid.add(button, j, i);
             }
 
         }
@@ -160,24 +161,24 @@ public class MainApp extends Application {
                 int latitude = j;
 
 
-                Label label = new Label("");
-                label.setId(i + "-" + j);
-                label.setStyle("-fx-background-color: #e0e0e0; -fx-alignment: center;");
-                label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                Button button = new Button("");
+                button.setId(i + "-" + j);
+//                button.getStyleClass().add("normal");
+                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-                label.setOnMouseEntered(e -> {
+                button.setOnMouseEntered(e -> {
                     if(gameStatus == 2) {
                         this.drawShot(longitude, latitude, grid);
                     }
 
                 });
-                label.setOnMouseExited(e -> {
+                button.setOnMouseExited(e -> {
                     if(gameStatus == 2) {
                         this.clearShot(longitude, latitude, grid);
                     }
                 });
 
-                label.setOnMouseClicked(e -> {
+                button.setOnMouseClicked(e -> {
                     if(gameStatus == 2) {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             this.shot(longitude, latitude, grid, aiSea, player);
@@ -186,7 +187,7 @@ public class MainApp extends Application {
                         }
                     }
                 });
-                grid.add(label, j, i);
+                grid.add(button, j, i);
             }
 
         }
@@ -222,15 +223,15 @@ public class MainApp extends Application {
     private void shot(int longitude, int latitude, GridPane grid, Sea aiSea, Player player) {
 
         String id = "#"+longitude+"-"+latitude;
-        Label label = (Label) grid.lookup(id);
-        if(label.getUserData() == null || !label.getUserData().equals("hit")) {
+        Button button = (Button) grid.lookup(id);
+        if(button.getUserData() == null || !button.getUserData().equals("hit")) {
 
             Ship shot = aiSea.shot(longitude, latitude, player);
 
-            label.setUserData("hit");
+            button.setUserData("hit");
 
             if (shot != null) {
-                label.setText("X");
+                button.setText("X");
                 if (shot.isSunken()) {
                     System.out.println("Zatopiony");
 
@@ -242,7 +243,7 @@ public class MainApp extends Application {
                         } else {
                             shipId = "#" + (shot.getLongitude() + i) + "-" + shot.getLatitude();
                         }
-                        Label next = (Label) grid.lookup(shipId);
+                        Button next = (Button) grid.lookup(shipId);
                         next.setStyle("-fx-background-color: #e03b3c; -fx-alignment: center;");
                     }
 
@@ -255,7 +256,7 @@ public class MainApp extends Application {
 
                 }
             } else {
-                label.setText("O");
+                button.setText("O");
             }
         }
 
@@ -278,9 +279,9 @@ public class MainApp extends Application {
                     }else {
                         id = "#"+(longitude+i)+"-"+latitude;
                     }
-                    Label next = (Label) grid.lookup(id);
+                    Button next = (Button) grid.lookup(id);
 
-                    next.setStyle("-fx-background-color: #e0db82; -fx-alignment: center;");
+                    next.getStyleClass().add("drawShip");
                     System.out.println(next);
                 }
 
@@ -290,17 +291,17 @@ public class MainApp extends Application {
 
     private void drawShot(int longitude, int latitude, GridPane grid) {
         String id = "#"+longitude+"-"+latitude;
-        Label label = (Label) grid.lookup(id);
-        if(label.getUserData() == null) {
-            label.setStyle("-fx-background-color: #e0db82; -fx-alignment: center;");
+        Button button = (Button) grid.lookup(id);
+        if(button.getUserData() == null) {
+            button.getStyleClass().add("checked");
         }
     }
 
     private void clearShot(int longitude, int latitude, GridPane grid) {
         String id = "#"+longitude+"-"+latitude;
-        Label label = (Label) grid.lookup(id);
-        if(label.getUserData() == null) {
-            label.setStyle("-fx-background-color: #e0e0e0; -fx-alignment: center;");
+        Button button = (Button) grid.lookup(id);
+        if(button.getUserData() == null) {
+            button.getStyleClass().remove("checked");
         }
     }
 
@@ -320,7 +321,7 @@ public class MainApp extends Application {
                     }else {
                         id = "#"+(longitude+i)+"-"+latitude;
                     }
-                    Label next = (Label) grid.lookup(id);
+                    Button next = (Button) grid.lookup(id);
                     next.setStyle("-fx-background-color: #575fe0; -fx-alignment: center;");
                     next.setUserData("added");
                 }
@@ -347,20 +348,20 @@ public class MainApp extends Application {
     private void clearShip(int longitude, int latitude, GridPane grid) {
 
         for (int i = 0; i < 10; i++) {
-            Label next = (Label) grid.lookup("#"+longitude+"-"+i);
+            Button next = (Button) grid.lookup("#"+longitude+"-"+i);
             Object test = next.getUserData();
             if(test == null){
-                next.setStyle("-fx-background-color: #e0e0e0; -fx-alignment: center;");
+                next.getStyleClass().remove("drawShip");
             }else {
-                next.setStyle("-fx-background-color: #575fe0; -fx-alignment: center;");
+                next.getStyleClass().remove("drawShip");
             }
         }
         for (int i = 0; i < 10; i++) {
-            Label next = (Label) grid.lookup("#"+i+"-"+latitude);
+            Button next = (Button) grid.lookup("#"+i+"-"+latitude);
             if(next.getUserData() == null){
-                next.setStyle("-fx-background-color: #e0e0e0; -fx-alignment: center;");
+                next.getStyleClass().remove("drawShip");
             }else {
-                next.setStyle("-fx-background-color: #575fe0; -fx-alignment: center;");
+                next.getStyleClass().remove("drawShip");
             }
         }
 

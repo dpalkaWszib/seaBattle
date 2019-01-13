@@ -1,0 +1,11 @@
+.drawShip {
+    -fx-background-color: #e0db82; -fx-alignment: center;
+}
+
+.normal {
+    -fx-background-color: #e0e0e0; -fx-alignment: center;
+}
+
+.checked {
+    -fx-background-color: #e0db82; -fx-alignment: center;
+}
